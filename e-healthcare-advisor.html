@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Healthcare Advisor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --secondary: #06b6d4;
+            --accent: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light-bg: #f0f9ff;
+            --dark: #1e293b;
+            --soft-green: #d1fae5;
+            --soft-blue: #dbeafe;
+            --soft-pink: #fce7f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Floating Medical Icons Background */
+        .floating-icons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(14, 165, 233, 0.1);
+            animation: float-around 20s infinite ease-in-out;
+        }
+
+        .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .floating-icon:nth-child(3) { bottom: 15%; left: 20%; animation-delay: 4s; }
+        .floating-icon:nth-child(4) { bottom: 25%; right: 10%; animation-delay: 6s; }
+        .floating-icon:nth-child(5) { top: 50%; left: 5%; animation-delay: 8s; }
+
+        @keyframes float-around {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -20px) rotate(5deg); }
+            50% { transform: translate(-15px, 10px) rotate(-3deg); }
+            75% { transform: translate(10px, 15px) rotate(3deg); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 3rem 0 2rem 0;
+            box-shadow: 0 15px 50px rgba(14, 165, 233, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: slideDown 0.8s ease-out;
+            border-radius: 0 0 50px 50px;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 3rem;
+            color: white;
+            margin: 0;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header .subtitle {
+            color: rgba(255,255,255,0.95);
+            font-size: 1.2rem;
+            margin-top: 0.75rem;
+            font-weight: 400;
+        }
+
+        .header-icon {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 1rem;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            10%, 30% { transform: scale(1.1); }
+            20%, 40% { transform: scale(1.05); }
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            margin-top: -30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 40px rgba(14, 165, 233, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            animation: fadeInUp 0.6s ease-out both;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(14, 165, 233, 0.2);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .icon-blue { background: linear-gradient(135deg, var(--soft-blue), #bfdbfe); color: var(--primary); }
+        .icon-green { background: linear-gradient(135deg, var(--soft-green), #a7f3d0); color: var(--accent); }
+        .icon-pink { background: linear-gradient(135deg, var(--soft-pink), #fbcfe8); color: #ec4899; }
+        .icon-purple { background: linear-gradient(135deg, #e9d5ff, #d8b4fe); color: #a855f7; }
+
+        .feature-title {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-desc {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            background: white;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1.5rem 2rem;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .symptom-checker {
+            padding: 2rem;
+        }
+
+        .symptom-tag {
+            display: inline-block;
+            background: var(--soft-blue);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .symptom-tag:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .symptom-tag.selected {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 0.875rem 1.25rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(14, 165, 233, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 0.875rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(14, 165, 233, 0.4);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .appointment-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .appointment-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .health-tip {
+            background: linear-gradient(135deg, var(--soft-green), #a7f3d0);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid var(--accent);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .health-tip strong {
+            color: #065f46;
+            font-size: 1.1rem;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            border: 2px solid var(--primary);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-title {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .doctor-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+        }
+
+        .doctor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .badge-status {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .badge-available {
+            background: var(--soft-green);
+            color: #065f46;
+        }
+
+        .badge-busy {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .modal-content {
+            border-radius: 25px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1.5rem 2rem;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .chat-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .chat-message.bot {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chat-message.user {
+            display: flex;
+            gap: 0.75rem;
+            flex-direction: row-reverse;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+
+        .chat-message.bot .chat-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .chat-message.user .chat-avatar {
+            background: linear-gradient(135deg, var(--accent), #16a34a);
+            color: white;
+        }
+
+        .chat-bubble {
+            padding: 0.875rem 1.25rem;
+            border-radius: 20px;
+            max-width: 80%;
+        }
+
+        .chat-message.bot .chat-bubble {
+            background: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-message.user .chat-bubble {
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 5rem;
+            border-radius: 50px 50px 0 0;
+        }
+
+        .footer-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .feature-card {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Medical Icons -->
+    <div class="floating-icons">
+        <i class="floating-icon bi bi-heart-pulse"></i>
+        <i class="floating-icon bi bi-capsule"></i>
+        <i class="floating-icon bi bi-shield-plus"></i>
+        <i class="floating-icon bi bi-thermometer-half"></i>
+        <i class="floating-icon bi bi-bandaid"></i>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="container header-content">
+            <div class="text-center">
+                <i class="bi bi-heart-pulse-fill header-icon"></i>
+                <h1>E-Healthcare Advisor</h1>
+                <p class="subtitle">Your Personal Health Companion - 24/7 Care & Guidance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container main-container my-5">
+        <!-- Feature Cards -->
+        <div class="row mb-5">
+            <div class="col-md-3">
+                <div class="feature-card" style="animation-delay: 0.1s;" onclick="showTab('symptom')">
+                    <div class="feature-icon icon-blue">
+                        <i class="bi bi-clipboard2-pulse"></i>
+                    </div>
+                    <h3 class="feature-title">Symptom Checker</h3>
+                    <p class="feature-desc">Get instant health insights based on your symptoms</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card" style="animation-delay: 0.2s;" onclick="showTab('appointment')">
+                    <div class="feature-icon icon-green">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h3 class="feature-title">Book Appointment</h3>
+                    <p class="feature-desc">Schedule consultations with specialists</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card" style="animation-delay: 0.3s;" onclick="showTab('records')">
+                    <div class="feature-icon icon-pink">
+                        <i class="bi bi-file-medical"></i>
+                    </div>
+                    <h3 class="feature-title">Health Records</h3>
+                    <p class="feature-desc">Access your medical history anytime</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-card" style="animation-delay: 0.4s;" onclick="openChat()">
+                    <div class="feature-icon icon-purple">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <h3 class="feature-title">AI Assistant</h3>
+                    <p class="feature-desc">Chat with our intelligent health bot</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Symptom Checker Section -->
+        <div id="symptomSection" class="card" style="display: none;">
+            <div class="card-header">
+                <i class="bi bi-clipboard2-pulse"></i> Symptom Checker
+            </div>
+            <div class="symptom-checker">
+                <h5 class="mb-3">Select Your Symptoms:</h5>
+                <div id="symptomTags" class="mb-4">
+                    <span class="symptom-tag" data-symptom="Fever">🌡️ Fever</span>
+                    <span class="symptom-tag" data-symptom="Cough">😷 Cough</span>
+                    <span class="symptom-tag" data-symptom="Headache">🤕 Headache</span>
+                    <span class="symptom-tag" data-symptom="Fatigue">😴 Fatigue</span>
+                    <span class="symptom-tag" data-symptom="Sore Throat">🗣️ Sore Throat</span>
+                    <span class="symptom-tag" data-symptom="Body Ache">💪 Body Ache</span>
+                    <span class="symptom-tag" data-symptom="Nausea">🤢 Nausea</span>
+                    <span class="symptom-tag" data-symptom="Dizziness">😵 Dizziness</span>
+                    <span class="symptom-tag" data-symptom="Chest Pain">💔 Chest Pain</span>
+                    <span class="symptom-tag" data-symptom="Shortness of Breath">🫁 Shortness of Breath</span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Duration:</label>
+                        <select class="form-select" id="duration">
+                            <option>Less than 24 hours</option>
+                            <option>1-3 days</option>
+                            <option>4-7 days</option>
+                            <option>More than a week</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Severity:</label>
+                        <select class="form-select" id="severity">
+                            <option>Mild</option>
+                            <option>Moderate</option>
+                            <option>Severe</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="analyzeSymptoms()">
+                    <i class="bi bi-search"></i> Analyze Symptoms
+                </button>
+
+                <div id="symptomResult"></div>
+            </div>
+        </div>
+
+        <!-- Book Appointment Section -->
+        <div id="appointmentSection" class="card" style="display: none;">
+            <div class="card-header">
+                <i class="bi bi-calendar-check"></i> Book an Appointment
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Specialization:</label>
+                        <select class="form-select" id="specialization" onchange="loadDoctors()">
+                            <option>General Physician</option>
+                            <option>Cardiologist</option>
+                            <option>Dermatologist</option>
+                            <option>Pediatrician</option>
+                            <option>Orthopedic</option>
+                            <option>Neurologist</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Preferred Date:</label>
+                        <input type="date" class="form-control" id="appointmentDate" min="">
+                    </div>
+                </div>
+
+                <h5 class="mb-3">Available Doctors:</h5>
+                <div id="doctorsList"></div>
+            </div>
+        </div>
+
+        <!-- Health Records Section -->
+        <div id="recordsSection" class="card" style="display: none;">
+            <div class="card-header">
+                <i class="bi bi-file-medical"></i> Your Health Records
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Add New Record</h5>
+                        <form id="recordForm" onsubmit="addRecord(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Record Type:</label>
+                                <select class="form-select" id="recordType" required>
+                                    <option>Medical Report</option>
+                                    <option>Prescription</option>
+                                    <option>Lab Test</option>
+                                    <option>Vaccination</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Title:</label>
+                                <input type="text" class="form-control" id="recordTitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Date:</label>
+                                <input type="date" class="form-control" id="recordDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Notes:</label>
+                                <textarea class="form-control" id="recordNotes" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Add Record
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Recent Records</h5>
+                        <div id="recordsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Tips -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4" style="font-family: 'Nunito', sans-serif; font-weight: 700;">
+                    <i class="bi bi-lightbulb"></i> Daily Health Tips
+                </h3>
+            </div>
+            <div class="col-md-6">
+                <div class="health-tip">
+                    <strong>💧 Stay Hydrated</strong>
+                    <p class="mb-0 mt-2">Drink at least 8 glasses of water daily to keep your body functioning optimally.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="health-tip">
+                    <strong>🏃 Regular Exercise</strong>
+                    <p class="mb-0 mt-2">30 minutes of moderate exercise daily can significantly improve your overall health.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div class="modal fade" id="chatModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-robot"></i> AI Health Assistant
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-container" id="chatContainer">
+                        <div class="chat-message bot">
+                            <div class="chat-avatar">
+                                <i class="bi bi-robot"></i>
+                            </div>
+                            <div class="chat-bubble">
+                                Hello! I'm your AI Health Assistant. How can I help you today?
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="chatInput" placeholder="Type your message...">
+                        <button class="btn btn-primary" onclick="sendMessage()">
+                            <i class="bi bi-send"></i> Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 style="font-family: 'Nunito', sans-serif; font-weight: 700;">E-Healthcare Advisor</h5>
+                    <p>Your trusted digital healthcare companion, providing 24/7 medical guidance and support.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 style="font-family: 'Nunito', sans-serif; font-weight: 700;">Quick Links</h5>
+                    <p><a href="#" class="footer-link">About Us</a></p>
+                    <p><a href="#" class="footer-link">Services</a></p>
+                    <p><a href="#" class="footer-link">Privacy Policy</a></p>
+                    <p><a href="#" class="footer-link">Terms of Service</a></p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 style="font-family: 'Nunito', sans-serif; font-weight: 700;">Emergency</h5>
+                    <p><i class="bi bi-telephone"></i> Emergency: 108</p>
+                    <p><i class="bi bi-envelope"></i> support@ehealthcare.com</p>
+                    <p><i class="bi bi-clock"></i> 24/7 Available</p>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.2);">
+            <p class="text-center mb-0">&copy; 2025 E-Healthcare Advisor. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize
+        let selectedSymptoms = [];
+        let healthRecords = JSON.parse(localStorage.getItem('healthRecords')) || [];
+        let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+
+        // Set min date for appointments
+        document.getElementById('appointmentDate').min = new Date().toISOString().split('T')[0];
+
+        // Show Tab Function
+        function showTab(tab) {
+            document.getElementById('symptomSection').style.display = 'none';
+            document.getElementById('appointmentSection').style.display = 'none';
+            document.getElementById('recordsSection').style.display = 'none';
+
+            if (tab === 'symptom') {
+                document.getElementById('symptomSection').style.display = 'block';
+            } else if (tab === 'appointment') {
+                document.getElementById('appointmentSection').style.display = 'block';
+                loadDoctors();
+            } else if (tab === 'records') {
+                document.getElementById('recordsSection').style.display = 'block';
+                displayRecords();
+            }
+
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+        }
+
+        // Symptom Selection
+        document.querySelectorAll('.symptom-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const symptom = this.dataset.symptom;
+                this.classList.toggle('selected');
+                
+                if (selectedSymptoms.includes(symptom)) {
+                    selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+                } else {
+                    selectedSymptoms.push(symptom);
+                }
+            });
+        });
+
+        // Analyze Symptoms
+        function analyzeSymptoms() {
+            if (selectedSymptoms.length === 0) {
+                alert('Please select at least one symptom');
+                return;
+            }
+
+            const duration = document.getElementById('duration').value;
+            const severity = document.getElementById('severity').value;
+
+            const result = document.getElementById('symptomResult');
+            
+            // Simple analysis logic
+            let analysis = '';
+            let recommendation = '';
+            
+            if (selectedSymptoms.includes('Chest Pain') || selectedSymptoms.includes('Shortness of Breath')) {
+                analysis = 'Your symptoms may indicate a serious condition. Please seek immediate medical attention.';
+                recommendation = 'Visit the Emergency Department immediately or call 108.';
+            } else if (severity === 'Severe') {
+                analysis = 'Based on your symptoms and their severity, we recommend consulting a doctor soon.';
+                recommendation = 'Schedule an appointment with a general physician within 24 hours.';
+            } else if (selectedSymptoms.includes('Fever') && selectedSymptoms.includes('Cough')) {
+                analysis = 'Your symptoms suggest a possible respiratory infection.';
+                recommendation = 'Rest, stay hydrated, and monitor your symptoms. Consult a doctor if symptoms worsen.';
+            } else {
+                analysis = 'Your symptoms appear to be mild. However, monitor your condition.';
+                recommendation = 'Rest, maintain good hygiene, and consult a doctor if symptoms persist beyond 3 days.';
+            }
+
+            result.innerHTML = `
+                <div class="result-box">
+                    <h4 class="result-title"><i class="bi bi-clipboard-check"></i> Analysis Results</h4>
+                    <p><strong>Symptoms:</strong> ${selectedSymptoms.join(', ')}</p>
+                    <p><strong>Duration:</strong> ${duration}</p>
+                    <p><strong>Severity:</strong> ${severity}</p>
+                    <hr>
+                    <p><strong>Analysis:</strong> ${analysis}</p>
+                    <p><strong>Recommendation:</strong> ${recommendation}</p>
+                    <div class="mt-3">
+                        <button class="btn btn-outline-primary" onclick="showTab('appointment')">
+                            <i class="bi bi-calendar"></i> Book Appointment
+                        </button>
+                        <button class="btn btn-outline-primary ms-2" onclick="openChat()">
+                            <i class="bi bi-chat"></i> Chat with AI
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load Doctors
+        function loadDoctors() {
+            const specialization = document.getElementById('specialization').value;
+            const doctors = [
+                { name: 'Dr. Sarah Johnson', specialty: specialization, rating: 4.8, available: true },
+                { name: 'Dr. Michael Chen', specialty: specialization, rating: 4.9, available: true },
+                { name: 'Dr. Emily Rodriguez', specialty: specialization, rating: 4.7, available: false },
+                { name: 'Dr. James Wilson', specialty: specialization, rating: 4.6, available: true }
+            ];
+
+            const list = document.getElementById('doctorsList');
+            list.innerHTML = doctors.map(doc => `
+                <div class="doctor-card">
+                    <div class="doctor-avatar">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">${doc.name}</h5>
+                        <p class="mb-1 text-muted">${doc.specialty}</p>
+                        <div>
+                            <i class="bi bi-star-fill text-warning"></i> ${doc.rating}
+                            <span class="badge-status ${doc.available ? 'badge-available' : 'badge-busy'} ms-2">
+                                ${doc.available ? 'Available' : 'Busy'}
+                            </span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" ${!doc.available ? 'disabled' : ''} onclick="bookAppointment('${doc.name}')">
+                        <i class="bi bi-calendar-check"></i> Book
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Book Appointment
+        function bookAppointment(doctorName) {
+            const date = document.getElementById('appointmentDate').value;
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+
+            const appointment = {
+                id: Date.now(),
+                doctor: doctorName,
+                date: date,
+                time: '10:00 AM',
+                status: 'Confirmed'
+            };
+
+            appointments.push(appointment);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+
+            alert(`Appointment booked successfully with ${doctorName} on ${date}!`);
+        }
+
+        // Add Health Record
+        function addRecord(event) {
+            event.preventDefault();
+
+            const record = {
+                id: Date.now(),
+                type: document.getElementById('recordType').value,
+                title: document.getElementById('recordTitle').value,
+                date: document.getElementById('recordDate').value,
+                notes: document.getElementById('recordNotes').value
+            };
+
+            healthRecords.push(record);
+            localStorage.setItem('healthRecords', JSON.stringify(healthRecords));
+
+            document.getElementById('recordForm').reset();
+            displayRecords();
+        }
+
+        // Display Records
+        function displayRecords() {
+            const list = document.getElementById('recordsList');
+            
+            if (healthRecords.length === 0) {
+                list.innerHTML = '<p class="text-muted">No records found</p>';
+                return;
+            }
+
+            list.innerHTML = healthRecords.slice(-5).reverse().map(record => `
+                <div class="appointment-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">${record.title}</h6>
+                            <small class="text-muted">${record.type} • ${record.date}</small>
+                            ${record.notes ? `<p class="mb-0 mt-2">${record.notes}</p>` : ''}
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary" onclick="deleteRecord(${record.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Delete Record
+        function deleteRecord(id) {
+            if (confirm('Are you sure you want to delete this record?')) {
+                healthRecords = healthRecords.filter(r => r.id !== id);
+                localStorage.setItem('healthRecords', JSON.stringify(healthRecords));
+                displayRecords();
+            }
+        }
+
+        // Chat Functions
+        function openChat() {
+            const modal = new bootstrap.Modal(document.getElementById('chatModal'));
+            modal.show();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            const container = document.getElementById('chatContainer');
+            
+            // User message
+            container.innerHTML += `
+                <div class="chat-message user">
+                    <div class="chat-avatar">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div class="chat-bubble">${message}</div>
+                </div>
+            `;
+
+            // Bot response (simple logic)
+            setTimeout(() => {
+                let response = getBotResponse(message);
+                container.innerHTML += `
+                    <div class="chat-message bot">
+                        <div class="chat-avatar">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <div class="chat-bubble">${response}</div>
+                    </div>
+                `;
+                container.scrollTop = container.scrollHeight;
+            }, 1000);
+
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function getBotResponse(message) {
+            const msg = message.toLowerCase();
+            
+            if (msg.includes('fever') || msg.includes('temperature')) {
+                return "If you have a fever, make sure to rest, stay hydrated, and monitor your temperature. If it persists for more than 3 days or exceeds 103°F (39.4°C), please consult a doctor.";
+            } else if (msg.includes('headache')) {
+                return "For headaches, try resting in a quiet, dark room, staying hydrated, and using a cold compress. If severe or persistent, please consult a healthcare professional.";
+            } else if (msg.includes('appointment') || msg.includes('book')) {
+                return "You can book an appointment by clicking on the 'Book Appointment' section. Select your preferred specialization and choose from available doctors.";
+            } else if (msg.includes('emergency')) {
+                return "For medical emergencies, please call 108 immediately or visit the nearest emergency department. This chat is for general guidance only.";
+            } else {
+                return "I'm here to help with general health queries. For specific medical advice, please consult with a qualified healthcare professional or book an appointment through our system.";
+            }
+        }
+
+        // Enter key for chat
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
